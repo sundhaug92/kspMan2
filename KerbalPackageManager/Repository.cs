@@ -2,18 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
 
 namespace KerbalPackageManager
 {
     public class Repository
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        public string Maintainer { get; private set; }
+        public string Maintainer { get; set; }
 
-        public Package[] Packages { get; private set; }
+        public Package[] Packages { get; set; }
 
         public Repository(Uri uri)
         {
@@ -29,6 +28,18 @@ namespace KerbalPackageManager
             {
                 pkgs.Add(new Package(pkg.ToObject<JObject>()));
             }
+            Packages = pkgs.ToArray();
+        }
+
+        public Repository()
+        {
+            Packages = new Package[0];
+        }
+
+        public void AddPackage(Package pkg)
+        {
+            List<Package> pkgs = new List<Package>(Packages);
+            pkgs.Add(pkg);
             Packages = pkgs.ToArray();
         }
     }

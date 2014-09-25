@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace KerbalPackageManager
+﻿namespace KerbalPackageManager
 {
     public class UnresolvedPackage
     {
