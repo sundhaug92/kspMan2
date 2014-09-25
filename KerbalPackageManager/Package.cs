@@ -23,7 +23,7 @@ namespace KerbalPackageManager
             ForumThreadUri = pgkInfo.GetValue("ForumThreadUri").ToObject<Uri>();
             Version = pgkInfo.GetValue("Version").ToObject<string>();
             DownloadUri = pgkInfo.GetValue("DownloadUri").ToObject<Uri>();
-
+            InstallTarget = pgkInfo.GetValue("InstallTarget").ToObject<InstallTarget>();
             List<UnresolvedPackage> deps = new List<UnresolvedPackage>();
             foreach (var pkg in pgkInfo.GetValue("Dependencies").ToList())
             {
