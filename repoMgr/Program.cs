@@ -45,6 +45,11 @@ namespace repoMgr
 
                     repo.AddPackage(new Package(Name, Maintainer, LicenceUri, Version, ForumThreadUri, DownloadUri, Dependencies, InstallTarget));
                 }
+                if (sCmd[0] == "del-package")
+                {
+                    string Name = RequestStringFromUser("Name");
+                    repo.Packages = (from package in repo.Packages where package.Name != Name select package).ToArray();
+                }
 
                 if (sCmd[0] == "import-kerbalstuff-package")
                 {
