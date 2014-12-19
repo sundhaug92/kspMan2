@@ -55,6 +55,7 @@
     <Compile Include="JsonRepository.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="UnresolvedPackage.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".kpm\Installed.jsons">

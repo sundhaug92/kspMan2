@@ -43,11 +43,7 @@ namespace KerbalPackageManager
             if (KerbalStuffId > 0)
             {
                 var pkg = Package.FromKerbalStuff(KerbalStuffId);
-                Type type = pkg.GetType();
-                foreach (var property in type.GetProperties())
-                {
-                    property.SetValue(this, property.GetValue(pkg));
-                }
+                Util.CopyProperties(pkg, this);
             }
         }
 
