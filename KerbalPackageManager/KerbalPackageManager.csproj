@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dotVersion.cs" />
+    <Compile Include="dotVersionVersion.cs" />
     <Compile Include="KerbalStuffRepository.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Package.cs" />
@@ -58,8 +60,8 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".kpm\Installed.jsons">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include=".kpm\Installed.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
