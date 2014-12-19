@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using KerbalStuff;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 
 namespace KerbalPackageManager
 {
@@ -31,6 +33,22 @@ namespace KerbalPackageManager
             }
             Dependencies = deps.ToArray();
             OneDirLevelUp = pgkInfo.GetValue("OneDirLevelUp").ToObject<bool>();
+            try
+            {
+                KerbalStuffId = pgkInfo.GetValue("KerbalStuffId").ToObject<long>();
+            }
+            catch (Exception e) { }
+
+            //Weird reflection-hack
+            if (KerbalStuffId > 0)
+            {
+                var pkg = Package.FromKerbalStuff(KerbalStuffId);
+                Type type = pkg.GetType();
+                foreach (var property in type.GetProperties())
+                {
+                    property.SetValue(this, property.GetValue(pkg));
+                }
+            }
         }
 
         public string Name { get; private set; }
@@ -52,6 +70,8 @@ namespace KerbalPackageManager
         public bool OneDirLevelUp { get; private set; }
 
         private InstallTarget InstallTarget;
+
+        public long KerbalStuffId { get; private set; }
 
         public void DownloadAndInstall()
         {
@@ -101,10 +121,17 @@ namespace KerbalPackageManager
         {
             return Name;
         }
+
+        public static Package FromKerbalStuff(long ksId)
+        {
+            var mod = KerbalStuffReadOnly.ModInfo(ksId);
+            var package = new Package(mod.Name, mod.Author, new Uri("http://example.com"), mod.Versions[0].FriendlyVersion, new Uri("http://example.com"), new Uri(KerbalStuffReadOnly.RootUri + mod.Versions[0].DownloadPath), null, InstallTarget.Unknown);
+            return package;
+        }
     }
 
     public enum InstallTarget
     {
-        Main, GameData
+        Unknown, Main, GameData
     }
 }

@@ -9,6 +9,7 @@ namespace kpmShell
         {
             Manager.Load();
             Console.Clear();
+            Package.FromKerbalStuff(398).DownloadAndInstall();
             while (true)
             {
                 PrintHelp();

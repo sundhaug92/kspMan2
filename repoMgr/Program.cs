@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace repoMgr
 {
@@ -14,14 +12,14 @@ namespace repoMgr
     {
         private static void Main(string[] args)
         {
-            Repository repo = new Repository();
+            JsonRepository repo = new JsonRepository();
             while (true)
             {
                 PrintHelp();
                 string cmd = RequestStringFromUser();
                 var sCmd = cmd.Split(' ');
                 if (sCmd[0] == "exit" || sCmd[0] == "quit") break;
-                if (sCmd[0] == "load-repo-file") repo = JObject.Parse(File.ReadAllText(sCmd[1])).ToObject<Repository>();
+                if (sCmd[0] == "load-repo-file") repo = JObject.Parse(File.ReadAllText(sCmd[1])).ToObject<JsonRepository>();
                 if (sCmd[0] == "save-repo-file") File.WriteAllText(sCmd[1], JObject.FromObject(repo).ToString());
                 if (sCmd[0] == "edit-repo-meta")
                 {
@@ -98,6 +96,7 @@ namespace repoMgr
             if (standard != "") Console.Write("{0}[{1}]=", prompt, standard);
             else Console.Write("{0}=", prompt);
             string ret = Console.ReadLine();
+            Console.WriteLine();
             if (ret == "") return standard;
             return ret;
         }

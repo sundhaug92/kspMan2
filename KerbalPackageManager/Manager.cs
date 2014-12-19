@@ -16,21 +16,30 @@ namespace KerbalPackageManager
             if (!Directory.Exists(".kpm\\cache\\")) Directory.CreateDirectory(".kpm\\cache\\");
             foreach (var repo in Directory.EnumerateFiles(".kpm\\cache\\"))
             {
-                var r = JObject.Parse(File.ReadAllText(repo)).ToObject<Repository>();
+                var r = JObject.Parse(File.ReadAllText(repo)).ToObject<JsonRepository>();
                 Console.WriteLine("Loading {0}", r.Name);
                 if (r.LastSyncronized < DateTime.Now.AddSeconds(-5))
                 {
                     Console.WriteLine("{0} too old, pulling from net", r.Name);
-                    r = new Repository(r.uri);
+                    r = new JsonRepository(r.uri);
                 }
                 repos.Add(r);
             }
             foreach (var repo in File.ReadAllLines(".kpm\\Repositories.txt"))
             {
-                var rep = new Repository(repo);
+                Repository rep;
+                if (repo == "@kerbalstuff")
+                {
+                    rep = new KerbalStuffRepository();
+                }
+                else
+                {
+                    rep = new JsonRepository(repo);
+                }
+                Console.WriteLine("Loading {0}", rep.Name);
+
                 if (!repos.Any(r => r.Name == rep.Name))
                 {
-                    Console.WriteLine("Loading {0}", repo);
                     repos.Add(rep);
                 }
             }
@@ -45,12 +54,8 @@ namespace KerbalPackageManager
             Console.WriteLine("Resolving {0}", PackageName);
             foreach (Repository repo in Repositories)
             {
-                if (repo.Packages != null)
-                {
-                    var pkg = (from package in repo.Packages where package.Name == PackageName select package).FirstOrDefault();
-                    Console.WriteLine("Found {0}", pkg);
-                    if (pkg != null) return pkg;
-                }
+                var pkg = repo.SearchByName(PackageName);
+                if (pkg != null) return pkg;
             }
 
             Console.WriteLine("Did not find {0}", PackageName);
