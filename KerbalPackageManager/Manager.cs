@@ -18,12 +18,15 @@ namespace KerbalPackageManager
             {
                 var r = JObject.Parse(File.ReadAllText(repo)).ToObject<JsonRepository>();
                 Console.WriteLine("Loading {0}", r.Name);
-                if (r.LastSyncronized < DateTime.Now.AddSeconds(-5))
+                if (r.uri != null)
                 {
-                    Console.WriteLine("{0} too old, pulling from net", r.Name);
-                    r = new JsonRepository(r.uri);
+                    if (r.LastSyncronized < DateTime.Now.AddSeconds(-5))
+                    {
+                        Console.WriteLine("{0} too old, pulling from net", r.Name);
+                        r = new JsonRepository(r.uri);
+                    }
+                    repos.Add(r);
                 }
-                repos.Add(r);
             }
             foreach (var repo in File.ReadAllLines(".kpm\\Repositories.txt"))
             {
