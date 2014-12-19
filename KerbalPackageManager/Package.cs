@@ -15,6 +15,7 @@ namespace KerbalPackageManager
         public Package(string Name, string Maintainer, Uri LicenceUri, string Version, Uri ForumThreadUri, Uri DownloadUri, UnresolvedPackage[] Dependencies, InstallTarget InstallTarget)
         {
             this.Name = Name; this.Maintainer = Maintainer; this.LicenceUri = LicenceUri; this.Version = Version; this.ForumThreadUri = ForumThreadUri; this.DownloadUri = DownloadUri; this.Dependencies = Dependencies; this.InstallTarget = InstallTarget;
+            if (Version.StartsWith("v")) this.Version = this.Version.Substring(1);
         }
 
         internal Package(JObject pgkInfo)
@@ -24,6 +25,7 @@ namespace KerbalPackageManager
             LicenceUri = pgkInfo.GetValue("LicenceUri").ToObject<Uri>();
             ForumThreadUri = pgkInfo.GetValue("ForumThreadUri").ToObject<Uri>();
             Version = pgkInfo.GetValue("Version").ToObject<string>();
+            if (Version.StartsWith("v")) this.Version = this.Version.Substring(1);
             DownloadUri = pgkInfo.GetValue("DownloadUri").ToObject<Uri>();
             InstallTarget = pgkInfo.GetValue("InstallTarget").ToObject<InstallTarget>();
             List<UnresolvedPackage> deps = new List<UnresolvedPackage>();
@@ -58,6 +60,8 @@ namespace KerbalPackageManager
         public Uri ForumThreadUri { get; private set; }
 
         public Uri DownloadUri { get; private set; }
+
+        public Uri dotVersion { get; private set; }
 
         public UnresolvedPackage[] Dependencies { get; private set; }
 
@@ -126,11 +130,33 @@ namespace KerbalPackageManager
                             if (Console.ReadKey().KeyChar == 'y') file.ExtractToFile(targetDirectory + toFilename, true);
                         }
                         else file.ExtractToFile(targetDirectory + toFilename, true);
+                        if (file.Name.EndsWith(".version"))
+                        {
+                            Console.WriteLine("Found .version {0}", file.Name);
+                            dotVersion dVers = new dotVersion(targetDirectory + toFilename);
+                            if (dVers.Name != this.Name) { Console.WriteLine(" * {0} is not for {1}", file.Name, this.Name); Manager.InstalledPackages.Add(Package.FromDotVersion(dVers)); }
+                            else
+                            {
+                                this.addDotVersion(dVers);
+                            }
+                        }
                     }
                 }
             }
             Console.WriteLine("Recording installation");
             Manager.InstalledPackages.Add(this);
+        }
+
+        private static Package FromDotVersion(dotVersion dVers)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void addDotVersion(dotVersion dVers)
+        {
+            this.Name = dVers.Name;
+            this.dotVersion = dVers.Url;
+            this.Version = dVers.Version.ToString();
         }
 
         public override string ToString()
@@ -142,6 +168,8 @@ namespace KerbalPackageManager
         {
             var mod = KerbalStuffReadOnly.ModInfo(ksId);
             var package = new Package(mod.Name, mod.Author, new Uri("http://example.com"), mod.Versions[0].FriendlyVersion, new Uri("http://example.com"), new Uri(KerbalStuffReadOnly.RootUri + mod.Versions[0].DownloadPath), null, InstallTarget.Unknown);
+
+            if (package.Version.StartsWith("v")) package.Version = package.Version.Substring(1);
             return package;
         }
     }
