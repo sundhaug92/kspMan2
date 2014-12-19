@@ -91,6 +91,20 @@ namespace KerbalPackageManager
             Console.WriteLine("Unzipping {0}", Name);
             using (var zip = ZipFile.Open(".kpm\\tmp.zip", ZipArchiveMode.Read))
             {
+                if (InstallTarget == InstallTarget.Unknown)
+                {
+                    bool hasGameData = false;
+                    foreach (ZipArchiveEntry file in zip.Entries)
+                    {
+                        if (file.FullName.ToLower().Contains("gamedata"))
+                        {
+                            if (!file.FullName.ToLower().StartsWith("gamedata")) OneDirLevelUp = true;
+                            hasGameData = true;
+                        }
+                    }
+                    if (hasGameData) targetDirectory = kspDirectory;
+                    else targetDirectory = kspDirectory + "GameData\\";
+                }
                 foreach (ZipArchiveEntry file in zip.Entries)
                 {
                     string toFilename = file.FullName;
