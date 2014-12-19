@@ -14,6 +14,7 @@ namespace kpmShell
                 PrintHelp();
                 Console.Write("=");
                 string cmd = Console.ReadLine();
+                Console.WriteLine();
                 var sCmd = cmd.Split(' ');
                 if (sCmd[0] == "load-manager") Manager.Load();
                 if (sCmd[0] == "save-manager") Manager.Save();
@@ -25,14 +26,18 @@ namespace kpmShell
                 {
                     foreach (var pkg in Manager.InstalledPackages) Console.WriteLine(pkg);
                 }
-                if (sCmd[0] == "reinstall-all")
+
+                //Does not work??
+                /*if (sCmd[0] == "reinstall-all")
                 {
-                    foreach (Package pkg in Manager.InstalledPackages) new UnresolvedPackage(pkg.Name).Resolve().DownloadAndInstall();
+                    var packages = Manager.InstalledPackages;
+                    foreach (Package pkg in packages) new UnresolvedPackage(pkg.Name).Resolve().DownloadAndInstall();
                 }
                 if (sCmd[0] == "update-all")
                 {
-                    foreach (Package pkg in Manager.InstalledPackages) pkg.DownloadAndInstall();
-                }
+                    var packages = Manager.InstalledPackages;
+                    foreach (Package pkg in packages) pkg.DownloadAndInstall();
+                }*/
                 if (sCmd[0] == "exit" || sCmd[0] == "quit") break;
             }
 
