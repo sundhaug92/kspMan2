@@ -27,8 +27,10 @@ namespace KerbalPackageManager
             List<UnresolvedPackage> deps = new List<UnresolvedPackage>();
             foreach (var pkg in pgkInfo.GetValue("Dependencies").ToList())
             {
-                deps.Add(new UnresolvedPackage(pkg.ToObject<string>()));
+                deps.Add(new UnresolvedPackage(pkg.Value<string>("Name")));
             }
+            Dependencies = deps.ToArray();
+            OneDirLevelUp = pgkInfo.GetValue("OneDirLevelUp").ToObject<bool>();
         }
 
         public string Name { get; private set; }
@@ -43,7 +45,13 @@ namespace KerbalPackageManager
 
         public Uri DownloadUri { get; private set; }
 
-        public UnresolvedPackage[] Dependencies { get; set; }
+        public UnresolvedPackage[] Dependencies { get; private set; }
+
+        public Package[] ContainsPackage { get; private set; }
+
+        public bool OneDirLevelUp { get; private set; }
+
+        private InstallTarget InstallTarget;
 
         public void DownloadAndInstall()
         {
@@ -57,6 +65,7 @@ namespace KerbalPackageManager
             else Console.WriteLine("No dependencies");
 
             string kspDirectory = Manager.GetConfigString("kspDirectory");
+            if (!kspDirectory.EndsWith("\\")) kspDirectory += "\\";
             string targetDirectory = null;
             if (this.InstallTarget == InstallTarget.GameData) targetDirectory = kspDirectory + "GameData\\";
             else if (this.InstallTarget == InstallTarget.Main) targetDirectory = kspDirectory;
@@ -64,21 +73,34 @@ namespace KerbalPackageManager
             Console.WriteLine("Downloading {0}", Name);
             new WebClient().DownloadFile(DownloadUri, ".kpm\\tmp.zip");
             Console.WriteLine("Unzipping {0}", Name);
-            var zip = ZipFile.Open(".kpm\\tmp.zip", ZipArchiveMode.Read);
-            foreach (ZipArchiveEntry file in zip.Entries)
+            using (var zip = ZipFile.Open(".kpm\\tmp.zip", ZipArchiveMode.Read))
             {
-                Console.WriteLine("File> {0}", file.FullName);
-                if (file.FullName.EndsWith("/"))
+                foreach (ZipArchiveEntry file in zip.Entries)
                 {
-                    if (!Directory.Exists(targetDirectory + file.FullName)) Directory.CreateDirectory(targetDirectory + file.FullName);
+                    string toFilename = file.FullName;
+                    if (OneDirLevelUp && toFilename.Contains("/")) toFilename = toFilename.Substring(toFilename.IndexOf("/") + 1);
+                    if (!toFilename.Contains('/')) continue;
+
+                    Console.WriteLine("File> {0}, {1}", file.FullName, targetDirectory + toFilename);
+                    if (toFilename.EndsWith("/"))
+                    {
+                        if (!Directory.Exists(targetDirectory + toFilename)) Directory.CreateDirectory(targetDirectory + toFilename);
+                    }
+                    else
+                    {
+                        if (toFilename.Contains('/') && !Directory.Exists(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')))) Directory.CreateDirectory(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')));
+                        file.ExtractToFile(targetDirectory + toFilename, true);
+                    }
                 }
-                else file.ExtractToFile(targetDirectory + file.FullName, true);
             }
             Console.WriteLine("Recording installation");
             Manager.InstalledPackages.Add(this);
         }
 
-        private InstallTarget InstallTarget;
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public enum InstallTarget
