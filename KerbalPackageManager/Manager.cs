@@ -49,7 +49,11 @@ namespace KerbalPackageManager
             Console.WriteLine("Loading installed packages");
             InstalledPackages = new List<Package>();
             if (File.Exists(".kpm\\Installed.json"))
-                InstalledPackages = JArray.Parse(File.ReadAllText(".kpm\\Installed.json")).ToObject<List<Package>>();
+            {
+                string json = File.ReadAllText(".kpm\\Installed.json");
+                if (json == "") json = "[]";
+                InstalledPackages = JArray.Parse(json).ToObject<List<Package>>();
+            }
         }
 
         public static Package Resolve(string PackageName)
