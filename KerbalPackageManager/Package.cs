@@ -119,7 +119,13 @@ namespace KerbalPackageManager
                     else
                     {
                         if (toFilename.Contains('/') && !Directory.Exists(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')))) Directory.CreateDirectory(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')));
-                        file.ExtractToFile(targetDirectory + toFilename, true);
+
+                        if (File.Exists(targetDirectory + toFilename) && File.GetLastAccessTime(targetDirectory + toFilename) > file.LastWriteTime)
+                        {
+                            Console.Write("Newer file already exists {0}, install anyways? [y/N]? ", targetDirectory + toFilename);
+                            if (Console.ReadKey().KeyChar == 'y') file.ExtractToFile(targetDirectory + toFilename, true);
+                        }
+                        else file.ExtractToFile(targetDirectory + toFilename, true);
                     }
                 }
             }
