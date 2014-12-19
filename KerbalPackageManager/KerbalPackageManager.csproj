@@ -60,9 +60,9 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".kpm\Installed.json">
+    <Content Include=".kpm\Installed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
