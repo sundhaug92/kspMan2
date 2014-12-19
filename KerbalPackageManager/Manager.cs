@@ -61,7 +61,7 @@ namespace KerbalPackageManager
 
         internal static string GetConfigString(string p)
         {
-            if (File.Exists(p))
+            if (File.Exists(".kpm\\config\\" + p + ".txt"))
                 return File.ReadAllText(".kpm\\config\\" + p + ".txt");
             else return "";
         }
