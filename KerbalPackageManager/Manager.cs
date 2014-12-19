@@ -55,12 +55,17 @@ namespace KerbalPackageManager
         public static Package Resolve(string PackageName)
         {
             Console.WriteLine("Resolving {0}", PackageName);
+            Package bestPackage = null;
             foreach (Repository repo in Repositories)
             {
                 var pkg = repo.SearchByName(PackageName);
-                if (pkg != null) return pkg;
+                if (pkg != null)
+                {
+                    if (bestPackage == null) bestPackage = pkg;
+                    else if (bestPackage.Version.CompareTo(pkg.Version) > 0) bestPackage = pkg;
+                }
             }
-
+            if (bestPackage != null) return bestPackage;
             Console.WriteLine("Did not find {0}", PackageName);
             return null;
         }
@@ -79,7 +84,7 @@ namespace KerbalPackageManager
         internal static bool SameOrNewerInstalled(Package package)
         {
             if (InstalledPackages == null) return false;
-            if ((from pkg in InstalledPackages where pkg.Name == package.Name && package.Version.CompareTo(pkg.Version) < 0 select pkg).Count() > 0)
+            if ((from pkg in InstalledPackages where pkg.Name == package.Name && package.Version.CompareTo(pkg.Version) <= 0 select pkg).Count() > 0)
             {
                 Console.WriteLine("{0} version {1} or newer already installed", package, package.Version);
                 return true;
