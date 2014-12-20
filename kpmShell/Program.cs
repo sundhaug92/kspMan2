@@ -26,7 +26,13 @@ namespace kpmShell
                 string cmd = Console.ReadLine();
                 Console.WriteLine();
                 var sCmd = cmd.Split(' ');
-                if (shortCmd.ContainsKey(sCmd[0])) sCmd[0] = shortCmd[sCmd[0]];
+                if (shortCmd.ContainsKey(sCmd[0]))
+                {
+                    cmd = shortCmd[sCmd[0]] + cmd.Substring(sCmd[0].Length);
+                    sCmd[0] = shortCmd[sCmd[0]];
+                }
+                sCmd[0] = sCmd[0].ToLower();
+
                 if (sCmd[0] == "load-manager") Manager.Load();
                 if (sCmd[0] == "save-manager") Manager.Save();
                 if (sCmd[0] == "install-package")
