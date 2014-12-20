@@ -21,6 +21,7 @@ namespace kpmShell
                 if (sCmd[0] == "install-package")
                 {
                     Manager.Resolve(cmd.Substring("install-package ".Length).Trim()).DownloadAndInstall();
+                    Manager.Save(); //Save after install
                 }
                 if (sCmd[0] == "list-installed-packages")
                 {
