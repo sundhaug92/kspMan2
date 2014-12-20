@@ -10,7 +10,6 @@ namespace KerbalPackageManager
 {
     public class JsonRepository : Repository
     {
-
         public JsonRepository(string uri)
         {
             this.UseStockCache = true;
@@ -47,7 +46,7 @@ namespace KerbalPackageManager
         }
         public override Package SearchByName(string PackageName)
         {
-            return (from package in this.Packages where package.Name == PackageName select package).FirstOrDefault();
+            return (from package in this.Packages where package.Name.ToLower().Contains(PackageName.ToLower()) || package.Name == PackageName select package).FirstOrDefault();
         }
     }
 }

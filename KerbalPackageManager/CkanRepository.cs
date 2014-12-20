@@ -85,7 +85,7 @@ namespace KerbalPackageManager
 
         public override Package SearchByName(string PackageName)
         {
-            return (from package in this.Packages where package.Name.ToLower().StartsWith(PackageName.ToLower()) || package.Name.ToLower() == PackageName.ToLower() select package).FirstOrDefault();
+            return (from package in this.Packages where package.Name.ToLower().Contains(PackageName.ToLower()) || package.Name.ToLower() == PackageName.ToLower() select package).FirstOrDefault();
         }
     }
 }
