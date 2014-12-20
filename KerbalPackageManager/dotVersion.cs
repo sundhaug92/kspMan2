@@ -16,10 +16,15 @@ namespace KerbalPackageManager
             Url = (Uri)jObj["URL"];
             if (jObj["VERSION"] != null)
             {
-                string ver = (string)jObj["VERSION"]["MAJOR"];
-                if (jObj["VERSION"]["MINOR"] != null) ver += "." + jObj["VERSION"]["MINOR"];
-                if (jObj["VERSION"]["PATCH"] != null) ver += "." + jObj["VERSION"]["PATCH"];
-                if (jObj["VERSION"]["BUILD"] != null) ver += "." + jObj["VERSION"]["BUILD"];
+                string ver;
+                try
+                {
+                    ver = (string)jObj["VERSION"]["MAJOR"];
+                    if (jObj["VERSION"]["MINOR"] != null) ver += "." + jObj["VERSION"]["MINOR"];
+                    if (jObj["VERSION"]["PATCH"] != null) ver += "." + jObj["VERSION"]["PATCH"];
+                    if (jObj["VERSION"]["BUILD"] != null) ver += "." + jObj["VERSION"]["BUILD"];
+                }
+                catch { ver = (string)jObj["VERSION"]; }
                 Version = new Version(ver);
             }
             else Version = null;
