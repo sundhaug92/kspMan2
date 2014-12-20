@@ -88,9 +88,8 @@ namespace KerbalPackageManager
             else Console.WriteLine("No dependencies");
 
             string kspDirectory = Manager.GetConfigString("kspDirectory");
-            if (!kspDirectory.EndsWith("\\")) kspDirectory += "\\";
             string targetDirectory = null;
-            if (this.InstallTarget == InstallTarget.GameData) targetDirectory = kspDirectory + "GameData\\";
+            if (this.InstallTarget == InstallTarget.GameData) targetDirectory = Path.Combine(kspDirectory, "GameData");
             else if (this.InstallTarget == InstallTarget.Main) targetDirectory = kspDirectory;
 
             Console.WriteLine("Downloading {0}", Name);
@@ -110,7 +109,7 @@ namespace KerbalPackageManager
                         }
                     }
                     if (hasGameData) targetDirectory = kspDirectory;
-                    else targetDirectory = kspDirectory + "GameData\\";
+                    else targetDirectory = Path.Combine(kspDirectory, "GameData");
                 }
                 foreach (ZipArchiveEntry file in zip.Entries)
                 {
