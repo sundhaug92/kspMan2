@@ -12,9 +12,10 @@ namespace KerbalPackageManager
 {
     public class Package
     {
-        public Package(string Name, string Maintainer, Uri LicenceUri, string Version, Uri ForumThreadUri, Uri DownloadUri, UnresolvedPackage[] Dependencies, InstallTarget InstallTarget)
+        public Package(string Name, string Maintainer, Uri LicenceUri, string Version, Uri ForumThreadUri, Uri DownloadUri, UnresolvedPackage[] Dependencies, InstallTarget InstallTarget, string Alias = "")
         {
             this.Name = Name; this.Maintainer = Maintainer; this.LicenceUri = LicenceUri; this.Version = Version; this.ForumThreadUri = ForumThreadUri; this.DownloadUri = DownloadUri; this.Dependencies = Dependencies; this.InstallTarget = InstallTarget;
+            this.Alias = Alias;
             if (Version.StartsWith("v")) this.Version = this.Version.Substring(1);
         }
 
@@ -70,6 +71,8 @@ namespace KerbalPackageManager
         public bool OneDirLevelUp { get; private set; }
 
         private InstallTarget InstallTarget;
+
+        public string Alias { get; private set; }
 
         public long KerbalStuffId { get; private set; }
 

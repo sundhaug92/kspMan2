@@ -55,7 +55,7 @@ namespace KerbalPackageManager
             {
                 if (fileName.EndsWith(".ckan"))
                 {
-                    string Name = "", Author = "", Version = "", Homepage = "", Download = "";
+                    string Name = "", Author = "", Version = "", Homepage = "", Download = "", Identifier = "";
                     List<UnresolvedPackage> dependencies = new List<UnresolvedPackage>();
 
                     var jObj = JObject.Parse(File.ReadAllText(fileName));
@@ -69,6 +69,8 @@ namespace KerbalPackageManager
                     catch (Exception e) { }
                     try { Download = (string)jObj["download"]; }
                     catch (Exception e) { }
+                    try { Identifier = (string)jObj["identifier"]; }
+                    catch (Exception e) { }
                     try
                     {
                         foreach (var depends in jObj["depends"])
@@ -77,7 +79,7 @@ namespace KerbalPackageManager
                         }
                     }
                     catch (Exception e) { }
-                    Package package = new Package(Name, Author, new Uri("http://example.com/"), Version, new Uri(Homepage != null ? Homepage : "http://example.com"), new Uri(Download), dependencies.ToArray(), InstallTarget.Unknown);
+                    Package package = new Package(Name, Author, new Uri("http://example.com/"), Version, new Uri(Homepage != null ? Homepage : "http://example.com"), new Uri(Download), dependencies.ToArray(), InstallTarget.Unknown, Identifier);
                     Packages.Add(package);
                 }
             }
@@ -85,7 +87,7 @@ namespace KerbalPackageManager
 
         public override Package SearchByName(string PackageName)
         {
-            return (from package in this.Packages where package.Name.ToLower().Contains(PackageName.ToLower()) || package.Name.ToLower() == PackageName.ToLower() select package).FirstOrDefault();
+            return (from package in this.Packages where package.Name.ToLower().Contains(PackageName.ToLower()) || package.Name.ToLower() == PackageName.ToLower() || package.Alias.ToLower().Contains(PackageName.ToLower()) || package.Alias.ToLower() == PackageName.ToLower() select package).FirstOrDefault();
         }
     }
 }
