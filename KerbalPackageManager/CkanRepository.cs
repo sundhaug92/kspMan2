@@ -40,18 +40,18 @@ namespace KerbalPackageManager
                         string toFilename = file.FullName;
                         if (toFilename.EndsWith("/"))
                         {
-                            if (!Directory.Exists(targetDirectory + toFilename)) Directory.CreateDirectory(targetDirectory + toFilename);
+                            if (!Directory.Exists(Path.Combine(targetDirectory, toFilename))) Directory.CreateDirectory(Path.Combine(targetDirectory, toFilename));
                         }
                         else
                         {
                             Console.WriteLine("CKAN:" + file);
-                            if (toFilename.Contains('/') && !Directory.Exists(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')))) Directory.CreateDirectory(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')));
-                            file.ExtractToFile(targetDirectory + toFilename, true);
+                            if (toFilename.Contains('/') && !Directory.Exists(Path.Combine(targetDirectory, toFilename.Substring(0, toFilename.LastIndexOf('/'))))) Directory.CreateDirectory(Path.Combine(targetDirectory, toFilename.Substring(0, toFilename.LastIndexOf('/'))));
+                            file.ExtractToFile(Path.Combine(targetDirectory, toFilename), true);
                         }
                     }
                 }
             }
-            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(".kpm", "cache", "ckan", "ckan-meta", "CKAN-meta-master")))
+            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(".kpm", "cache", "ckan", "CKAN-meta", "CKAN-meta-master")))
             {
                 if (fileName.EndsWith(".ckan"))
                 {

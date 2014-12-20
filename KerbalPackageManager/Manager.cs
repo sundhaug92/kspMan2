@@ -83,7 +83,7 @@ namespace KerbalPackageManager
         internal static string GetConfigString(string p)
         {
             if (File.Exists(Path.Combine(".kpm", "config", p + ".txt")))
-                return File.ReadAllText(Path.Combine(".kpm", "config" + p + ".txt"));
+                return File.ReadAllText(Path.Combine(".kpm", "config", p + ".txt"));
             else return "";
         }
 
@@ -112,8 +112,8 @@ namespace KerbalPackageManager
             foreach (Repository rep in repos)
             {
                 if (!rep.UseStockCache) continue;
-                if (!File.Exists(cacheDir + rep.Name)) File.Create(rep.Name).Close();
-                File.WriteAllText(cacheDir + rep.Name, JObject.FromObject(rep).ToString());
+                if (!File.Exists(Path.Combine(cacheDir, rep.Name))) File.Create(Path.Combine(cacheDir, rep.Name)).Close();
+                File.WriteAllText(Path.Combine(cacheDir, rep.Name), JObject.FromObject(rep).ToString());
             }
         }
     }

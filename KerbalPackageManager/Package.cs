@@ -117,25 +117,25 @@ namespace KerbalPackageManager
                     if (OneDirLevelUp && toFilename.Contains("/")) toFilename = toFilename.Substring(toFilename.IndexOf("/") + 1);
                     if (!toFilename.Contains('/')) continue;
 
-                    Console.WriteLine("File> {0}, {1}", file.FullName, targetDirectory + toFilename);
+                    Console.WriteLine("File> {0}, {1}", file.FullName, Path.Combine(targetDirectory, toFilename));
                     if (toFilename.EndsWith("/"))
                     {
-                        if (!Directory.Exists(targetDirectory + toFilename)) Directory.CreateDirectory(targetDirectory + toFilename);
+                        if (!Directory.Exists(Path.Combine(targetDirectory, toFilename))) Directory.CreateDirectory(Path.Combine(targetDirectory, toFilename));
                     }
                     else
                     {
-                        if (toFilename.Contains('/') && !Directory.Exists(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')))) Directory.CreateDirectory(targetDirectory + toFilename.Substring(0, toFilename.LastIndexOf('/')));
+                        if (toFilename.Contains('/') && !Directory.Exists((Path.Combine(targetDirectory, toFilename.Substring(0, toFilename.LastIndexOf('/')))))) Directory.CreateDirectory(Path.Combine(targetDirectory, toFilename.Substring(0, toFilename.LastIndexOf('/'))));
 
-                        if (File.Exists(targetDirectory + toFilename) && File.GetLastAccessTime(targetDirectory + toFilename) > file.LastWriteTime)
+                        if (File.Exists(Path.Combine(targetDirectory, toFilename)) && File.GetLastAccessTime(Path.Combine(targetDirectory, toFilename)) > file.LastWriteTime)
                         {
-                            Console.Write("Newer file already exists {0}, install anyways? [y/N]? ", targetDirectory + toFilename);
-                            if (Console.ReadKey().KeyChar == 'y') file.ExtractToFile(targetDirectory + toFilename, true);
+                            Console.Write("Newer file already exists {0}, install anyways? [y/N]? ", Path.Combine(targetDirectory, toFilename));
+                            if (Console.ReadKey().KeyChar == 'y') file.ExtractToFile(Path.Combine(targetDirectory, toFilename), true);
                         }
-                        else file.ExtractToFile(targetDirectory + toFilename, true);
+                        else file.ExtractToFile(Path.Combine(targetDirectory, toFilename), true);
                         if (file.Name.EndsWith(".version"))
                         {
                             Console.WriteLine("Found .version {0}", file.Name);
-                            dotVersion dVers = new dotVersion(targetDirectory + toFilename);
+                            dotVersion dVers = new dotVersion(Path.Combine(targetDirectory, toFilename));
                             if (dVers.Name != this.Name) { Console.WriteLine(" * {0} is not for {1}", file.Name, this.Name); Manager.InstalledPackages.Add(Package.FromDotVersion(dVers)); }
                             else
                             {
