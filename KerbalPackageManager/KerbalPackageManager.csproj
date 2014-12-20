@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CkanRepository.cs" />
     <Compile Include="dotVersion.cs" />
     <Compile Include="dotVersionVersion.cs" />
     <Compile Include="KerbalStuffRepository.cs" />

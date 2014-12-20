@@ -35,6 +35,10 @@ namespace KerbalPackageManager
                 {
                     rep = new KerbalStuffRepository();
                 }
+                else if (repo == "@ckan")
+                {
+                    rep = new CkanRepository();
+                }
                 else
                 {
                     rep = new JsonRepository(repo);
@@ -66,7 +70,7 @@ namespace KerbalPackageManager
                 if (pkg != null)
                 {
                     if (bestPackage == null) bestPackage = pkg;
-                    else if (bestPackage.Version.CompareTo(pkg.Version) > 0) bestPackage = pkg;
+                    else if (bestPackage.Version.CompareTo(pkg.Version) < 0) bestPackage = pkg;
                 }
             }
             if (bestPackage != null) return bestPackage;
