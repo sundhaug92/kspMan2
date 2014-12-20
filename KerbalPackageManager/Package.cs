@@ -154,9 +154,9 @@ namespace KerbalPackageManager
 
         private void addDotVersion(dotVersion dVers)
         {
-            this.Name = dVers.Name;
-            this.dotVersion = dVers.Url;
-            this.Version = dVers.Version.ToString();
+            if (dVers.Name != null) this.Name = dVers.Name;
+            if (dVers.Url != null) this.dotVersion = dVers.Url;
+            if (dVers.Version != null) this.Version = dVers.Version.ToString();
         }
 
         public override string ToString()
