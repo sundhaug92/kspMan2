@@ -1,5 +1,6 @@
 ﻿using KerbalPackageManager;
 using System;
+using System.Collections.Generic;
 
 namespace kpmShell
 {
@@ -7,6 +8,15 @@ namespace kpmShell
     {
         private static void Main(string[] args)
         {
+            Dictionary<string, string> shortCmd = new Dictionary<string, string>();
+            shortCmd.Add("lm", "load-manager");
+            shortCmd.Add("sm", "save-manager");
+            shortCmd.Add("ip", "install-package");
+            shortCmd.Add("lip", "list-installed-packages");
+            shortCmd.Add("ua", "update-all");
+            shortCmd.Add("e", "exit");
+            shortCmd.Add("q", "quit");
+
             Manager.Load();
             Console.Clear();
             while (true)
@@ -16,6 +26,7 @@ namespace kpmShell
                 string cmd = Console.ReadLine();
                 Console.WriteLine();
                 var sCmd = cmd.Split(' ');
+                if (shortCmd.ContainsKey(sCmd[0])) sCmd[0] = shortCmd[sCmd[0]];
                 if (sCmd[0] == "load-manager") Manager.Load();
                 if (sCmd[0] == "save-manager") Manager.Save();
                 if (sCmd[0] == "install-package")
@@ -42,7 +53,7 @@ namespace kpmShell
         {
             Console.WriteLine("Commands: ");
             Console.WriteLine("install-package:\t\tInstall package");
-            Console.WriteLine("update-all:\t\tUpdate all packages");
+            Console.WriteLine("update-all:\t\t\tUpdate all packages");
             Console.WriteLine("list-installed-packages:\tList installed packages");
             Console.WriteLine("load-manager:\t\t\tLoad manager state from disk");
             Console.WriteLine("save-manager:\t\t\tSave manager state to disk");
