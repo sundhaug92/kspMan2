@@ -14,8 +14,15 @@ namespace KerbalPackageManager
             var jObj = JObject.Parse(File.ReadAllText(toFilename));
             Name = (string)jObj["NAME"];
             Url = (Uri)jObj["URL"];
-            var ver = jObj["VERSION"];
-            Version = new Version((int)ver["MAJOR"], (int)ver["MINOR"], (int)ver["PATCH"], (int)ver["BUILD"]);
+            if (jObj["VERSION"] != null)
+            {
+                string ver = (string)jObj["VERSION"]["MAJOR"];
+                if (jObj["VERSION"]["MINOR"] != null) ver += "." + jObj["VERSION"]["MINOR"];
+                if (jObj["VERSION"]["PATCH"] != null) ver += "." + jObj["VERSION"]["PATCH"];
+                if (jObj["VERSION"]["BUILD"] != null) ver += "." + jObj["VERSION"]["BUILD"];
+                Version = new Version(ver);
+            }
+            else Version = null;
         }
 
         public string Name { get; set; }
