@@ -1,6 +1,7 @@
 ﻿using KerbalPackageManager;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kpmShell
 {
@@ -42,6 +43,7 @@ namespace kpmShell
                 }
                 if (sCmd[0] == "list-installed-packages")
                 {
+                    Manager.InstalledPackages = (from pkg in Manager.InstalledPackages orderby pkg.Name select pkg).ToList();
                     foreach (var pkg in Manager.InstalledPackages) Console.WriteLine(pkg);
                 }
                 if (sCmd[0] == "update-all")
