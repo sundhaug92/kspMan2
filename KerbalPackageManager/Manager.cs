@@ -13,8 +13,8 @@ namespace KerbalPackageManager
         public static void Load()
         {
             Console.WriteLine("Loading repositories");
-            if (!Directory.Exists(".kpm\\cache\\")) Directory.CreateDirectory(".kpm\\cache\\");
-            foreach (var repo in Directory.EnumerateFiles(".kpm\\cache\\"))
+            if (!Directory.Exists(Path.Combine(".kpm", "cache"))) Directory.CreateDirectory(Path.Combine(".kpm", "cache"));
+            foreach (var repo in Directory.EnumerateFiles(Path.Combine(".kpm", "cache")))
             {
                 var r = JObject.Parse(File.ReadAllText(repo)).ToObject<JsonRepository>();
                 Console.WriteLine("Loading {0}", r.Name);
@@ -28,7 +28,7 @@ namespace KerbalPackageManager
                     repos.Add(r);
                 }
             }
-            foreach (var repo in File.ReadAllLines(".kpm\\Repositories.txt"))
+            foreach (var repo in File.ReadAllLines(Path.Combine(".kpm", "Repositories.txt")))
             {
                 Repository rep;
                 if (repo == "@kerbalstuff")
@@ -52,9 +52,9 @@ namespace KerbalPackageManager
             }
             Console.WriteLine("Loading installed packages");
             InstalledPackages = new List<Package>();
-            if (File.Exists(".kpm\\Installed.json"))
+            if (File.Exists(Path.Combine(".kpm", "Installed.json")))
             {
-                string json = File.ReadAllText(".kpm\\Installed.json");
+                string json = File.ReadAllText(Path.Combine(".kpm", "Installed.json"));
                 if (json == "") json = "[]";
                 InstalledPackages = JArray.Parse(json).ToObject<List<Package>>();
             }
@@ -82,8 +82,8 @@ namespace KerbalPackageManager
 
         internal static string GetConfigString(string p)
         {
-            if (File.Exists(".kpm\\config\\" + p + ".txt"))
-                return File.ReadAllText(".kpm\\config\\" + p + ".txt");
+            if (File.Exists(Path.Combine(".kpm", "config", p + ".txt")))
+                return File.ReadAllText(Path.Combine(".kpm", "config" + p + ".txt"));
             else return "";
         }
 
@@ -104,11 +104,11 @@ namespace KerbalPackageManager
         public static void Save()
         {
             Console.WriteLine("Saving installed-packages list");
-            File.Create(".kpm\\Installed.jsons").Close();
-            File.WriteAllText(".kpm\\Installed.json", JArray.FromObject(InstalledPackages).ToString());
+            File.Create(Path.Combine(".kpm", "Installed.jsons")).Close();
+            File.WriteAllText(Path.Combine(".kpm", "Installed.json"), JArray.FromObject(InstalledPackages).ToString());
             Console.WriteLine("Saving repositories");
 
-            string cacheDir = ".kpm\\cache\\";
+            string cacheDir = Path.Combine(".kpm", "cache");
             foreach (Repository rep in repos)
             {
                 if (!rep.UseStockCache) continue;

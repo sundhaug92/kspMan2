@@ -94,9 +94,9 @@ namespace KerbalPackageManager
             else if (this.InstallTarget == InstallTarget.Main) targetDirectory = kspDirectory;
 
             Console.WriteLine("Downloading {0}", Name);
-            new WebClient().DownloadFile(DownloadUri, ".kpm\\tmp.zip");
+            new WebClient().DownloadFile(DownloadUri, Path.Combine(".kpm", "tmp.zip"));
             Console.WriteLine("Unzipping {0}", Name);
-            using (var zip = ZipFile.Open(".kpm\\tmp.zip", ZipArchiveMode.Read))
+            using (var zip = ZipFile.Open(Path.Combine(".kpm", "tmp.zip"), ZipArchiveMode.Read))
             {
                 if (InstallTarget == InstallTarget.Unknown)
                 {
