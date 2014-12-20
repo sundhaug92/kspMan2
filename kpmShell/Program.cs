@@ -27,18 +27,11 @@ namespace kpmShell
                 {
                     foreach (var pkg in Manager.InstalledPackages) Console.WriteLine(pkg);
                 }
-
-                //Does not work??
-                /*if (sCmd[0] == "reinstall-all")
+                if (sCmd[0] == "update-all")
                 {
                     var packages = Manager.InstalledPackages;
                     foreach (Package pkg in packages) new UnresolvedPackage(pkg.Name).Resolve().DownloadAndInstall();
                 }
-                if (sCmd[0] == "update-all")
-                {
-                    var packages = Manager.InstalledPackages;
-                    foreach (Package pkg in packages) pkg.DownloadAndInstall();
-                }*/
                 if (sCmd[0] == "exit" || sCmd[0] == "quit") break;
             }
 
@@ -49,6 +42,7 @@ namespace kpmShell
         {
             Console.WriteLine("Commands: ");
             Console.WriteLine("install-package:\t\tInstall package");
+            Console.WriteLine("update-all:\t\tUpdate all packages");
             Console.WriteLine("list-installed-packages:\tList installed packages");
             Console.WriteLine("load-manager:\t\t\tLoad manager state from disk");
             Console.WriteLine("save-manager:\t\t\tSave manager state to disk");
