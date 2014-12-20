@@ -111,6 +111,7 @@ namespace KerbalPackageManager
             string cacheDir = ".kpm\\cache\\";
             foreach (Repository rep in repos)
             {
+                if (!rep.UseStockCache) continue;
                 if (!File.Exists(cacheDir + rep.Name)) File.Create(rep.Name).Close();
                 File.WriteAllText(cacheDir + rep.Name, JObject.FromObject(rep).ToString());
             }

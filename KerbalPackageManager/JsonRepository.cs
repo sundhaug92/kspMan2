@@ -13,6 +13,7 @@ namespace KerbalPackageManager
 
         public JsonRepository(string uri)
         {
+            this.UseStockCache = true;
             var jString = (new WebClient()).DownloadString(uri);
             JObject jObj = JObject.Parse(jString);
             this.uri = uri.ToString();

@@ -14,6 +14,7 @@ namespace KerbalPackageManager
         {
             this.Maintainer = "KerbalStuff";
             Name = "KerbalStuff";
+            this.UseStockCache = false;
         }
 
         public override Package SearchByName(string Name)

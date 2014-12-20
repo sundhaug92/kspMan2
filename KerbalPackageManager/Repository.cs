@@ -20,6 +20,7 @@ namespace KerbalPackageManager
         {
             return Name;
         }
+        public bool UseStockCache { get; set; }
 
         public virtual Package SearchByName(string PackageName) { throw new NotImplementedException(); }
     }

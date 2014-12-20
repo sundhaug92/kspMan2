@@ -18,6 +18,7 @@ namespace KerbalPackageManager
         {
             this.Name = "CKAN";
             this.Maintainer = "CKAN";
+            this.UseStockCache = false;
             Packages = new List<Package>();
             if (File.GetLastWriteTime(".kpm\\cache\\ckan\\ckan-meta.zip") < DateTime.Now.AddHours(-1))
             {
